@@ -1,0 +1,412 @@
+{% extends "controller/_base.html" %}
+
+{% block content %}
+<section>
+
+  <div class="row">
+    <div class="column" align="right">
+      <div align="center">
+        <button id="btn_dir_up" type="button" class="button btn_2_col">Up</button>
+        <br>
+        <button id="btn_yaw_ccw" type="button" class="button btn_2_col">Yaw<br>(CCW)</button>
+        <button id="btn_yaw_cw" type="button" class="button btn_2_col">Yaw<br>(CW)</button>
+        <br>
+        <button id="btn_dir_down" type="button" class="button btn_2_col">Down</button>
+      </div>
+    </div>
+    <div class="column" align="left">
+      <div align="center">
+        <button id="btn_dir_north" type="button" class="button btn_2_col">North</button>
+        <br>
+        <button id="btn_dir_west" type="button" class="button btn_2_col">West</button>
+        <button id="btn_dir_east" type="button" class="button btn_2_col">East</button>
+        <br>
+        <button id="btn_dir_south" type="button" class="button btn_2_col">South</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="four_columns" align="center">
+      <button id="button_guided" type="button" class="button btn_4_col">Guided<br>mode</button>
+    </div>
+    <div class="four_columns" align="center">
+      <button id="button_arm" type="button" class="button btn_4_col">Arm</button>
+    </div>
+    <div class="four_columns" align="center">
+      <button id="button_takeoff" type="button" class="button btn_4_col">Takeoff</button>
+    </div>
+    <div class="four_columns" align="center">
+      <button id="button_land" type="button" class="button btn_4_col">Land<br>Mode</button>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="column" align="center">
+      <label for="degrees"> Degrees for yaw:
+        <input type="number" id="degrees" name="degrees" min="0" max="360" value="0">
+      </label>
+    </div>
+    <div class="column" align="center">
+      <label for="velocity"> Velocity(m/s):
+        <input type="number" id="velocity" name="velocity" min="0" max="30" value="0">
+      </label>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div id="controller_div" class="one_column" align="center">
+      <br><br>
+      <label for="switch"> Controller:
+        <br>
+        <label class="switch" id="switch">
+          <input id="controller_switch" type="checkbox" unchecked>
+          <span class="slider round"></span>
+        </label>
+      </label>
+      <h2 id="start">Press a button on your controller to start</h2>
+    </div>
+  </div>
+  <br>
+
+  {% endblock content %}
+
+  {% block javascript_bottons %}
+  <script>
+
+    const commandUrl = "{% url 'command' %}";
+
+    function send_yaw_command(btn_id) {
+
+      btn_pressed = btn_id.split('_')[1] + "_" + btn_id.split('_')[2];
+      var degrees = document.getElementById("degrees").value;
+
+      if (degrees == 0) {
+        alert("degrees is 0.");
+        return;
+      }
+
+      const command = {
+        btn_pressed: btn_pressed,
+        velocity: 0,
+        degrees: degrees,
+        axes: null
+      };
+
+      //alert(command["btn_pressed"]);
+      exec_command(commandUrl, command);
+    }
+
+    function send_direction_command(btn_id) {
+
+      direction = btn_id.split('_')[2];
+      var velocity = document.getElementById("velocity").value;
+
+      if (velocity == 0) {
+        alert("velocity is 0.");
+        return;
+      }
+
+      const command = {
+        btn_pressed: direction,
+        velocity: velocity,
+        degrees: 0,
+        axes: null
+      };
+
+      //alert(command["btn_pressed"]);
+      exec_command(commandUrl, command);
+    }
+
+    function send_command(btn_id) {
+
+      btn_pressed = btn_id.split('_')[1];
+
+      const command = {
+        btn_pressed: btn_pressed,
+        velocity: 0,
+        degrees: 0,
+        axes: null
+      };
+
+      //alert(command["btn_pressed"]);
+      exec_command(commandUrl, command);
+    }
+
+
+    const dir_btns = document.querySelectorAll('button[id^=btn_dir]');
+    dir_btns.forEach(btn => btn.addEventListener("mousedown", () =>
+      send_direction_command(btn.id)));
+
+    const yaw_btns = document.querySelectorAll('button[id^=btn_yaw]');
+    yaw_btns.forEach(btn => btn.addEventListener("mousedown", () =>
+      send_yaw_command(btn.id)));
+
+    const buttons = document.querySelectorAll('button[id^=button]');
+    buttons.forEach(btn => btn.addEventListener("mousedown", () =>
+      send_command(btn.id)));
+
+    const btns = document.querySelectorAll('button[id^=btn]');
+    btns.forEach(btn => {
+
+      btn.addEventListener("mouseup", () => {
+
+        const command = {
+          btn_pressed: "stop",
+          velocity: 0,
+          degrees: 0,
+          axes: null
+        }
+        exec_command(commandUrl, command);
+      });
+    });
+
+    var checker = document.getElementById('controller_switch');
+    checker.onchange = function () {
+
+      //var result = false;
+      if (!!this.checked) {
+        //result = enableListeners();
+        enableListeners();
+      }
+      else {
+        disableListeners();
+      }
+
+      // if (result){
+      //   alert("true");
+      buttons.forEach(btn => btn.disabled = !!this.checked);
+      btns.forEach(btn => btn.disabled = !!this.checked);
+      //}
+    };
+
+  // })();
+
+  </script>
+  {% endblock %}
+
+  {% block javascript_rc %}
+  <script>
+
+    var haveEvents = 'GamepadEvent' in window;
+    var haveWebkitEvents = 'WebKitGamepadEvent' in window;
+    var controllers = {};
+    var rAF = window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.requestAnimationFrame;
+
+    var cAF = window.mozCancelAnimationFrame ||
+      window.webkitCancelAnimation ||
+      window.cancelAnimationFrame;
+
+    var globalID;
+    var firstTime = true;
+    var axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
+
+    var fps = 10;
+    var fpsInterval = 1000 / fps;
+    var then = Date.now();
+
+    function connecthandler(e) {
+      console.log("sono qui");
+      addgamepad(e.gamepad);
+    }
+
+    function addgamepad(gamepad) {
+      controllers[gamepad.index] = gamepad;
+      var d = document.createElement("div");
+      d.setAttribute("id", "controller" + gamepad.index);
+
+      // var t = document.createElement("h1");
+      // t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+      // d.appendChild(t);
+
+      var a = document.createElement("div");
+      a.className = "axes";
+
+      for (i = 0; i < 4/*gamepad.axes.length*/; i++) {
+        e = document.createElement("meter");
+        e.className = "axis";
+        //e.id = "a" + i;
+        e.setAttribute("min", "-1");
+        e.setAttribute("max", "1");
+        e.setAttribute("value", "0");
+        e.innerHTML = i;
+
+        var f = document.createElement("div");
+        f.className = "axes_value";
+        f.innerHTML = i;
+
+        a.appendChild(f);
+        a.appendChild(e);
+      }
+
+      var row_div = document.createElement("div");
+      row_div.className = "row";
+
+      var col_div = document.createElement("div");
+      col_div.className = "one_column";
+
+      col_div.appendChild(a);
+      row_div.appendChild(col_div);
+      d.appendChild(row_div);
+
+      document.getElementById("start").style.display = "none";
+      var controller_div = document.getElementById("controller_div");
+      controller_div.appendChild(d);
+
+      globalID = window.requestAnimationFrame(updateStatus);
+    }
+
+    function disconnecthandler(e) {
+      removegamepad(e.gamepad);
+    }
+
+    function removegamepad(gamepad) {
+      //alert("removing...");
+      cancelAnimation();
+      var controller_div = document.getElementById("controller_div");
+      var d = document.getElementById("controller" + gamepad.index);
+      if (d != null) {
+        controller_div.removeChild(d);
+      }
+      console.log(controllers);
+      delete controllers[gamepad.index];
+      console.log(controllers);
+      document.getElementById('controller_switch').checked = false;
+      //alert("removed");
+    }
+
+    function updateStatus() {
+
+      // if (!haveEvents) {
+      scangamepads();
+      // }
+
+      var axes_dict = {};
+
+      for (j in controllers) {
+
+        var controller = controllers[j];
+        var d = document.getElementById("controller" + j);
+
+        var axes = d.getElementsByClassName("axis");
+        var axes_values = d.getElementsByClassName("axes_value");
+        for (var i = 0; i < 4/*controller.axes.length*/; i++) {
+
+          var a = axes[i];
+          a.innerHTML = axes_name[i] + ": " + controller.axes[i].toFixed(2);
+          a.setAttribute("value", controller.axes[i].toFixed(2));
+
+          var f = axes_values[i];
+          f.textContent = a.innerHTML;
+
+          axes_dict[axes_name[i]] = controller.axes[i].toFixed(2);
+        }
+      }
+
+      now = Date.now();
+      elapsed = now - then;
+      //console.log("elapsed: " + elapsed + " fpsInterval: " + fpsInterval);
+
+      if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval);
+
+        var velocity = document.getElementById("velocity").value;
+        var degrees = document.getElementById("degrees").value;
+
+        const command = {
+          btn_pressed: "",
+          velocity: velocity,
+          degrees: degrees,
+          axes: axes_dict
+        }
+        exec_command(commandUrl, command);
+        //console.log(axes_dict);
+      }
+
+      globalID = window.requestAnimationFrame(updateStatus);
+    }
+
+    function scangamepads() {
+      var gamepads = navigator.getGamepads ? navigator.getGamepads() :
+        (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+        
+      for (var i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && (gamepads[i].index in controllers)) {
+          controllers[gamepads[i].index] = gamepads[i];
+        }
+      }
+    }
+
+
+    function enableListeners() {
+
+      // var gamepad = navigator.getGamepads()[0];
+      // if(gamepad === null){
+      //   alert("No gamepad is connected.");
+      //   document.getElementById('controller_switch').checked = false;
+      //   return false;
+      // }
+
+      var gamepad = navigator.getGamepads()[0];
+      // if(gamepad === null){
+      //   alert("No gamepad is connected.");
+      // }
+
+      // //alert("enableListeners");
+      // if(firstTime){
+      //   firstTime = false;
+      // }
+      // else{
+      //   scangamepads();
+      //   addgamepad(gamepad);
+      // }
+
+      if (haveEvents) {
+        window.addEventListener("gamepadconnected", (e) => {
+          debugger;
+          connecthandler(e);
+        });
+        window.addEventListener("gamepaddisconnected", disconnecthandler);
+      }
+      else if (haveWebkitEvents) {
+        window.addEventListener("webkitgamepadconnected", connecthandler);
+        window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
+      }
+      else {
+        setInterval(scangamepads, 1000);
+      }
+
+      //return true;
+    }
+
+    function disableListeners() {
+
+      if (haveEvents) {
+        //window.removeEventListener("gamepadconnected", connecthandler);
+        //window.removeEventListener("gamepaddisconnected", disconnecthandler);
+      }
+      else if (haveWebkitEvents) {
+        //window.removeEventListener("webkitgamepadconnected", connecthandler);
+        //window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
+      }
+      else {
+        //clearInterval(scangamepads);
+      }
+
+      cancelAnimation();
+      //alert("getting navigator");
+      // var gamepad = navigator.getGamepads()[0];
+      // if (!(gamepad === null)){
+      //   removegamepad(gamepad);
+      // }
+      //window.location.reload();
+    }
+
+    function cancelAnimation() {
+      window.cancelAnimationFrame(globalID);
+    }
+
+  </script>
+  {% endblock %}
