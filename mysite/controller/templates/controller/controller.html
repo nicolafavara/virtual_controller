@@ -64,7 +64,9 @@
           <span class="slider round"></span>
         </label>
       </label>
-      <h2 id="start">Press a button on your controller to start</h2>
+      <h2 id="start" style="visibility: hidden;">Press a button on your controller to start</h2>
+      <br>
+      <div id="controllers"></div>
     </div>
   </div>
   <br>
@@ -79,7 +81,7 @@
     function send_yaw_command(btn_id) {
 
       btn_pressed = btn_id.split('_')[1] + "_" + btn_id.split('_')[2];
-      var degrees = document.getElementById("degrees").value;
+      let degrees = document.getElementById("degrees").value;
 
       if (degrees == 0) {
         alert("degrees is 0.");
@@ -100,7 +102,7 @@
     function send_direction_command(btn_id) {
 
       direction = btn_id.split('_')[2];
-      var velocity = document.getElementById("velocity").value;
+      let velocity = document.getElementById("velocity").value;
 
       if (velocity == 0) {
         alert("velocity is 0.");
@@ -161,23 +163,21 @@
       });
     });
 
-    var checker = document.getElementById('controller_switch');
+    let checker = document.getElementById('controller_switch');
     checker.onchange = function () {
 
-      //var result = false;
       if (!!this.checked) {
-        //result = enableListeners();
+        document.getElementById("start").style.visibility = "visible";
         enableListeners();
       }
       else {
+        document.getElementById("start").style.visibility = "hidden";
         disableListeners();
       }
 
-      // if (result){
-      //   alert("true");
+      // enable/disable buttons depending on controller_switch state
       buttons.forEach(btn => btn.disabled = !!this.checked);
       btns.forEach(btn => btn.disabled = !!this.checked);
-      //}
     };
 
   // })();
@@ -188,40 +188,43 @@
   {% block javascript_rc %}
   <script>
 
-    var haveEvents = 'GamepadEvent' in window;
-    var haveWebkitEvents = 'WebKitGamepadEvent' in window;
-    var controllers = {};
-    var rAF = window.mozRequestAnimationFrame ||
+    let haveEvents = 'GamepadEvent' in window;
+    let haveWebkitEvents = 'WebKitGamepadEvent' in window;
+    const rAF = window.mozRequestAnimationFrame ||
       window.webkitRequestAnimationFrame ||
       window.requestAnimationFrame;
 
-    var cAF = window.mozCancelAnimationFrame ||
+    const cAF = window.mozCancelAnimationFrame ||
       window.webkitCancelAnimation ||
       window.cancelAnimationFrame;
 
-    var globalID;
-    var firstTime = true;
-    var axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
+    const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
+    const fps = 10;
 
-    var fps = 10;
-    var fpsInterval = 1000 / fps;
-    var then = Date.now();
+    let controllers = {};
+    let globalID;
+    let fpsInterval = 1000 / fps;
+    let then = Date.now();
+
+    //TESTING
+    let enableController = false;
 
     function connecthandler(e) {
-      console.log("sono qui");
+      console.log("CONNECTED.");
       addgamepad(e.gamepad);
     }
 
     function addgamepad(gamepad) {
       controllers[gamepad.index] = gamepad;
-      var d = document.createElement("div");
+
+      let d = document.createElement("div");
       d.setAttribute("id", "controller" + gamepad.index);
 
-      // var t = document.createElement("h1");
+      // let t = document.createElement("h1");
       // t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
       // d.appendChild(t);
 
-      var a = document.createElement("div");
+      let a = document.createElement("div");
       a.className = "axes";
 
       for (i = 0; i < 4/*gamepad.axes.length*/; i++) {
@@ -233,7 +236,7 @@
         e.setAttribute("value", "0");
         e.innerHTML = i;
 
-        var f = document.createElement("div");
+        let f = document.createElement("div");
         f.className = "axes_value";
         f.innerHTML = i;
 
@@ -241,79 +244,87 @@
         a.appendChild(e);
       }
 
-      var row_div = document.createElement("div");
+      let row_div = document.createElement("div");
       row_div.className = "row";
 
-      var col_div = document.createElement("div");
+      let col_div = document.createElement("div");
       col_div.className = "one_column";
 
       col_div.appendChild(a);
       row_div.appendChild(col_div);
       d.appendChild(row_div);
 
-      document.getElementById("start").style.display = "none";
-      var controller_div = document.getElementById("controller_div");
+      let controller_div = document.getElementById("controllers");
       controller_div.appendChild(d);
 
-      globalID = window.requestAnimationFrame(updateStatus);
+      document.getElementById("start").style.visibility = "hidden";
+
+      requestAnimation();
     }
 
     function disconnecthandler(e) {
       removegamepad(e.gamepad);
+      document.getElementById("start").style.visibility = "hidden";
     }
 
     function removegamepad(gamepad) {
-      //alert("removing...");
       cancelAnimation();
-      var controller_div = document.getElementById("controller_div");
-      var d = document.getElementById("controller" + gamepad.index);
+      let controller_div = document.getElementById("controller_div");
+      let d = document.getElementById("controller" + gamepad.index);
       if (d != null) {
         controller_div.removeChild(d);
       }
-      console.log(controllers);
       delete controllers[gamepad.index];
-      console.log(controllers);
       document.getElementById('controller_switch').checked = false;
-      //alert("removed");
+      disableListeners();
     }
 
     function updateStatus() {
 
-      // if (!haveEvents) {
-      scangamepads();
-      // }
+      let checker = document.getElementById('controller_switch');
+      if (!!checker.checked == false) {
+        console.log("switch is false");
+        return;
+      }
 
-      var axes_dict = {};
+      scangamepads();
+
+      let axes_dict = {};
 
       for (j in controllers) {
 
-        var controller = controllers[j];
-        var d = document.getElementById("controller" + j);
+        let controller = controllers[j];
+        let d = document.getElementById("controller" + j);
 
-        var axes = d.getElementsByClassName("axis");
-        var axes_values = d.getElementsByClassName("axes_value");
-        for (var i = 0; i < 4/*controller.axes.length*/; i++) {
+        let axes = d.getElementsByClassName("axis");
+        let axes_values = d.getElementsByClassName("axes_value");
+        for (let i = 0; i < 4/*controller.axes.length*/; i++) {
 
-          var a = axes[i];
+          let a = axes[i];
           a.innerHTML = axes_name[i] + ": " + controller.axes[i].toFixed(2);
           a.setAttribute("value", controller.axes[i].toFixed(2));
 
-          var f = axes_values[i];
+          let f = axes_values[i];
           f.textContent = a.innerHTML;
 
           axes_dict[axes_name[i]] = controller.axes[i].toFixed(2);
         }
       }
 
+      sendCommand(axes_dict);
+      requestAnimation();
+    }
+
+    function sendCommand(axes_dict){
+
       now = Date.now();
       elapsed = now - then;
-      //console.log("elapsed: " + elapsed + " fpsInterval: " + fpsInterval);
 
       if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
 
-        var velocity = document.getElementById("velocity").value;
-        var degrees = document.getElementById("degrees").value;
+        let velocity = document.getElementById("velocity").value;
+        let degrees = document.getElementById("degrees").value;
 
         const command = {
           btn_pressed: "",
@@ -321,53 +332,75 @@
           degrees: degrees,
           axes: axes_dict
         }
-        exec_command(commandUrl, command);
-        //console.log(axes_dict);
-      }
 
-      globalID = window.requestAnimationFrame(updateStatus);
+        exec_command(commandUrl, command);
+      }
     }
 
     function scangamepads() {
-      var gamepads = navigator.getGamepads ? navigator.getGamepads() :
+      let gamepads = navigator.getGamepads ? navigator.getGamepads() :
         (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
         
-      for (var i = 0; i < gamepads.length; i++) {
+      for (let i = 0; i < gamepads.length; i++) {
         if (gamepads[i] && (gamepads[i].index in controllers)) {
           controllers[gamepads[i].index] = gamepads[i];
         }
       }
+
+      if (enableController){
+        // We enter this block only after 
+        // the first time the user deactivates the switch 
+        reEnableControllerInput();
+      } 
     }
 
+    /**
+     * re-enables input from the controller if 
+     * the switch is active and there are controllers 
+     * that are found to be already connected
+     */
+    function reEnableControllerInput(){
+
+      let checker = document.getElementById('controller_switch');
+      console.log("checker.checked: " + checker.checked + "\n" +
+                  "controllers length: " + Object.keys(controllers).length + "\n" +
+                  "enableController: " + enableController
+                  );
+      if((!!checker.checked) == true && Object.keys(controllers).length > 0) {
+
+        changeControllerVisibility(true);
+        enableController = false;
+
+        // restart the animation by which
+        // we start taking controller input
+        requestAnimation();
+
+        document.getElementById("start").style.visibility = "hidden";
+      }
+    }
+
+    function changeControllerVisibility(isVisible){
+
+      let visibility = "";
+      if (isVisible){
+        visibility = "visible";
+      }
+      else{
+        visibility = "hidden";
+      }
+
+      for (j in controllers) {
+        document.getElementById("controller" + j).style.visibility = visibility;
+      }
+    }
 
     function enableListeners() {
 
-      // var gamepad = navigator.getGamepads()[0];
-      // if(gamepad === null){
-      //   alert("No gamepad is connected.");
-      //   document.getElementById('controller_switch').checked = false;
-      //   return false;
-      // }
-
-      var gamepad = navigator.getGamepads()[0];
-      // if(gamepad === null){
-      //   alert("No gamepad is connected.");
-      // }
-
-      // //alert("enableListeners");
-      // if(firstTime){
-      //   firstTime = false;
-      // }
-      // else{
-      //   scangamepads();
-      //   addgamepad(gamepad);
-      // }
+      console.log("enableListeners");
 
       if (haveEvents) {
-        window.addEventListener("gamepadconnected", (e) => {
-          debugger;
-          connecthandler(e);
-        });
+
+        window.addEventListener("gamepadconnected", connecthandler); 
         window.addEventListener("gamepaddisconnected", disconnecthandler);
       }
       else if (haveWebkitEvents) {
@@ -375,37 +408,48 @@
         window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
       }
       else {
-        setInterval(scangamepads, 1000);
+        setInterval(scangamepads, 500);
       }
 
-      //return true;
+      scangamepads();
     }
 
     function disableListeners() {
 
+      console.log("disableListeners");
+
+      changeControllerVisibility(false);
+
+      // the next time the switch is active, this boolean
+      // will be used to re-enable controller's input
+      enableController = true;
+
       if (haveEvents) {
-        //window.removeEventListener("gamepadconnected", connecthandler);
-        //window.removeEventListener("gamepaddisconnected", disconnecthandler);
+        window.removeEventListener("gamepadconnected", connecthandler);
+        window.removeEventListener("gamepaddisconnected", disconnecthandler);
       }
       else if (haveWebkitEvents) {
-        //window.removeEventListener("webkitgamepadconnected", connecthandler);
-        //window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
+        window.removeEventListener("webkitgamepadconnected", connecthandler);
+        window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
       }
       else {
-        //clearInterval(scangamepads);
+        clearInterval(scangamepads);
       }
 
       cancelAnimation();
-      //alert("getting navigator");
-      // var gamepad = navigator.getGamepads()[0];
-      // if (!(gamepad === null)){
-      //   removegamepad(gamepad);
-      // }
-      //window.location.reload();
+    }
+
+    function requestAnimation(){
+
+      console.log("Requesting AnimationFrame...");
+      globalID = rAF(updateStatus);
+      //globalID = window.requestAnimationFrame(updateStatus);
     }
 
     function cancelAnimation() {
-      window.cancelAnimationFrame(globalID);
+      console.log("Cancelling AnimationFrame...");
+      cAF(globalID);
+      //window.cancelAnimationFrame(globalID);
     }
 
   </script>
