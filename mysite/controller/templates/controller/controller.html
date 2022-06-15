@@ -2,451 +2,448 @@
 
 {% block content %}
 <section>
-
-  <div class="row">
-    <div class="column" align="right">
-      <div align="center">
-        <button id="btn_dir_up" type="button" class="button btn_2_col">Up</button>
-        <br>
-        <button id="btn_yaw_ccw" type="button" class="button btn_2_col">Yaw<br>(CCW)</button>
-        <button id="btn_yaw_cw" type="button" class="button btn_2_col">Yaw<br>(CW)</button>
-        <br>
-        <button id="btn_dir_down" type="button" class="button btn_2_col">Down</button>
+  <div class="collapse show" id="collapsediv1">
+    <div class="row">
+      <div class="col text-center">
+        <div>
+          <button id="btn_dir_up" type="button" class="btn3d btn btn-default btn-lg">Up</button>
+          <br>
+          <button id="btn_yaw_ccw" type="button" class="btn3d btn btn-default btn-lg">Yaw<br>(CCW)</button>
+          <button id="btn_yaw_cw" type="button" class="btn3d btn btn-default btn-lg">Yaw<br>(CW)</button>
+          <br>
+          <button id="btn_dir_down" type="button" class="btn3d btn btn-default btn-lg">Down</button>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div>
+          <button id="btn_dir_north" type="button" class="btn3d btn btn-default btn-lg">North</button>
+          <br>
+          <button id="btn_dir_west" type="button" class="btn3d btn btn-default btn-lg">West</button>
+          <button id="btn_dir_east" type="button" class="btn3d btn btn-default btn-lg">East</button>
+          <br>
+          <button id="btn_dir_south" type="button" class="btn3d btn btn-default btn-lg">South</button>
+        </div>
       </div>
     </div>
-    <div class="column" align="left">
-      <div align="center">
-        <button id="btn_dir_north" type="button" class="button btn_2_col">North</button>
-        <br>
-        <button id="btn_dir_west" type="button" class="button btn_2_col">West</button>
-        <button id="btn_dir_east" type="button" class="button btn_2_col">East</button>
-        <br>
-        <button id="btn_dir_south" type="button" class="button btn_2_col">South</button>
+    <br>
+    <div class="row">
+      <div class="col text-center">
+        <button id="button_guided" type="button" class="btn3d btn btn-default btn-lg">Guided<br>mode</button>
+      </div>
+      <div class="col  text-center">
+        <button id="button_arm" type="button" class="btn3d btn btn-default btn-lg">Arm</button>
+      </div>
+      <div class="col  text-center">
+        <button id="button_takeoff" type="button" class="btn3d btn btn-default btn-lg">Takeoff</button>
+      </div>
+      <div class="col  text-center">
+        <button id="button_land" type="button" class="btn3d btn btn-default btn-lg">Land<br>Mode</button>
+      </div>
+    </div>
+    <br>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label for="degrees" class="form-label">Degrees for yaw:</label>
+      <input type="range" class="form-range" id="degrees" oninput="this.nextElementSibling.value = this.value" min="0"
+        max="360" value="0">
+      <output>0</output>
+    </div>
+    <div class="col">
+      <label for="velocity" class="form-label">Velocity(m/s):</label>
+      <input type="range" class="form-range" id="velocity" oninput="this.nextElementSibling.value = this.value" min="0"
+        max="30" value="0">
+      <output>0</output>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-check form-switch text-center">
+        <input class="form-check-input" type="checkbox" id="controller_switch" unchecked>
+        <label class="form-check-label" for="controller_switch">Controller</label>
       </div>
     </div>
   </div>
-  <br>
-  <div class="row">
-    <div class="four_columns" align="center">
-      <button id="button_guided" type="button" class="button btn_4_col">Guided<br>mode</button>
-    </div>
-    <div class="four_columns" align="center">
-      <button id="button_arm" type="button" class="button btn_4_col">Arm</button>
-    </div>
-    <div class="four_columns" align="center">
-      <button id="button_takeoff" type="button" class="button btn_4_col">Takeoff</button>
-    </div>
-    <div class="four_columns" align="center">
-      <button id="button_land" type="button" class="button btn_4_col">Land<br>Mode</button>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="column" align="center">
-      <label for="degrees"> Degrees for yaw:
-        <input type="number" id="degrees" name="degrees" min="0" max="360" value="0">
-      </label>
-    </div>
-    <div class="column" align="center">
-      <label for="velocity"> Velocity(m/s):
-        <input type="number" id="velocity" name="velocity" min="0" max="30" value="0">
-      </label>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div id="controller_div" class="one_column" align="center">
-      <br><br>
-      <label for="switch"> Controller:
+
+  <br><br>
+
+  <div class="collapse" id="collapsediv2">
+    <div class="row text-center">
+      <div id="controller_div" class="col">
+        <h2 id="start">Press a button on your controller to start</h2>
         <br>
-        <label class="switch" id="switch">
-          <input id="controller_switch" type="checkbox" unchecked>
-          <span class="slider round"></span>
-        </label>
-      </label>
-      <h2 id="start" style="visibility: hidden;">Press a button on your controller to start</h2>
-      <br>
-      <div id="controllers"></div>
+        <div id="controllers"></div>
+      </div>
     </div>
   </div>
-  <br>
+</section>
+{% endblock content %}
 
-  {% endblock content %}
+{% block javascript_bottons %}
+<script>
 
-  {% block javascript_bottons %}
-  <script>
+  const commandUrl = "{% url 'command' %}";
 
-    const commandUrl = "{% url 'command' %}";
+  function send_yaw_command(btn_id) {
 
-    function send_yaw_command(btn_id) {
+    btn_pressed = btn_id.split('_')[1] + "_" + btn_id.split('_')[2];
+    let degrees = document.getElementById("degrees").value;
 
-      btn_pressed = btn_id.split('_')[1] + "_" + btn_id.split('_')[2];
-      let degrees = document.getElementById("degrees").value;
-
-      if (degrees == 0) {
-        alert("degrees is 0.");
-        return;
-      }
-
-      const command = {
-        btn_pressed: btn_pressed,
-        velocity: 0,
-        degrees: degrees,
-        axes: null
-      };
-
-      //alert(command["btn_pressed"]);
-      exec_command(commandUrl, command);
+    if (degrees == 0) {
+      alert("degrees is 0.");
+      return;
     }
 
-    function send_direction_command(btn_id) {
-
-      direction = btn_id.split('_')[2];
-      let velocity = document.getElementById("velocity").value;
-
-      if (velocity == 0) {
-        alert("velocity is 0.");
-        return;
-      }
-
-      const command = {
-        btn_pressed: direction,
-        velocity: velocity,
-        degrees: 0,
-        axes: null
-      };
-
-      //alert(command["btn_pressed"]);
-      exec_command(commandUrl, command);
-    }
-
-    function send_command(btn_id) {
-
-      btn_pressed = btn_id.split('_')[1];
-
-      const command = {
-        btn_pressed: btn_pressed,
-        velocity: 0,
-        degrees: 0,
-        axes: null
-      };
-
-      //alert(command["btn_pressed"]);
-      exec_command(commandUrl, command);
-    }
-
-
-    const dir_btns = document.querySelectorAll('button[id^=btn_dir]');
-    dir_btns.forEach(btn => btn.addEventListener("mousedown", () =>
-      send_direction_command(btn.id)));
-
-    const yaw_btns = document.querySelectorAll('button[id^=btn_yaw]');
-    yaw_btns.forEach(btn => btn.addEventListener("mousedown", () =>
-      send_yaw_command(btn.id)));
-
-    const buttons = document.querySelectorAll('button[id^=button]');
-    buttons.forEach(btn => btn.addEventListener("mousedown", () =>
-      send_command(btn.id)));
-
-    const btns = document.querySelectorAll('button[id^=btn]');
-    btns.forEach(btn => {
-
-      btn.addEventListener("mouseup", () => {
-
-        const command = {
-          btn_pressed: "stop",
-          velocity: 0,
-          degrees: 0,
-          axes: null
-        }
-        exec_command(commandUrl, command);
-      });
-    });
-
-    let checker = document.getElementById('controller_switch');
-    checker.onchange = function () {
-
-      if (!!this.checked) {
-        document.getElementById("start").style.visibility = "visible";
-        enableListeners();
-      }
-      else {
-        document.getElementById("start").style.visibility = "hidden";
-        disableListeners();
-      }
-
-      // enable/disable buttons depending on controller_switch state
-      buttons.forEach(btn => btn.disabled = !!this.checked);
-      btns.forEach(btn => btn.disabled = !!this.checked);
+    const command = {
+      btn_pressed: btn_pressed,
+      velocity: 0,
+      degrees: degrees,
+      axes: null
     };
 
-  // })();
+    //alert(command["btn_pressed"]);
+    exec_command(commandUrl, command);
+  }
 
-  </script>
-  {% endblock %}
+  function send_direction_command(btn_id) {
 
-  {% block javascript_rc %}
-  <script>
+    direction = btn_id.split('_')[2];
+    let velocity = document.getElementById("velocity").value;
 
-    let haveEvents = 'GamepadEvent' in window;
-    let haveWebkitEvents = 'WebKitGamepadEvent' in window;
-    const rAF = window.mozRequestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.requestAnimationFrame;
-
-    const cAF = window.mozCancelAnimationFrame ||
-      window.webkitCancelAnimation ||
-      window.cancelAnimationFrame;
-
-    const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
-    const fps = 10;
-
-    let controllers = {};
-    let globalID;
-    let fpsInterval = 1000 / fps;
-    let then = Date.now();
-
-    //TESTING
-    let enableController = false;
-
-    function connecthandler(e) {
-      console.log("CONNECTED.");
-      addgamepad(e.gamepad);
+    if (velocity == 0) {
+      alert("velocity is 0.");
+      return;
     }
 
-    function addgamepad(gamepad) {
-      controllers[gamepad.index] = gamepad;
+    const command = {
+      btn_pressed: direction,
+      velocity: velocity,
+      degrees: 0,
+      axes: null
+    };
 
-      let d = document.createElement("div");
-      d.setAttribute("id", "controller" + gamepad.index);
+    //alert(command["btn_pressed"]);
+    exec_command(commandUrl, command);
+  }
 
-      let a = document.createElement("div");
-      a.className = "axes";
+  function send_command(btn_id) {
 
-      for (i = 0; i < 4/*gamepad.axes.length*/; i++) {
-        e = document.createElement("meter");
-        e.className = "axis";
-        //e.id = "a" + i;
-        e.setAttribute("min", "-1");
-        e.setAttribute("max", "1");
-        e.setAttribute("value", "0");
-        e.innerHTML = i;
+    btn_pressed = btn_id.split('_')[1];
 
-        let f = document.createElement("div");
-        f.className = "axes_value";
-        f.innerHTML = i;
+    const command = {
+      btn_pressed: btn_pressed,
+      velocity: 0,
+      degrees: 0,
+      axes: null
+    };
 
-        a.appendChild(f);
-        a.appendChild(e);
+    //alert(command["btn_pressed"]);
+    exec_command(commandUrl, command);
+  }
+
+
+  const dir_btns = document.querySelectorAll('button[id^=btn_dir]');
+  dir_btns.forEach(btn => btn.addEventListener("mousedown", () =>
+    send_direction_command(btn.id)));
+
+  const yaw_btns = document.querySelectorAll('button[id^=btn_yaw]');
+  yaw_btns.forEach(btn => btn.addEventListener("mousedown", () =>
+    send_yaw_command(btn.id)));
+
+  const buttons = document.querySelectorAll('button[id^=button]');
+  buttons.forEach(btn => btn.addEventListener("mousedown", () =>
+    send_command(btn.id)));
+
+  const btns = document.querySelectorAll('button[id^=btn]');
+  btns.forEach(btn => {
+
+    btn.addEventListener("mouseup", () => {
+
+      const command = {
+        btn_pressed: "stop",
+        velocity: 0,
+        degrees: 0,
+        axes: null
       }
+      exec_command(commandUrl, command);
+    });
+  });
 
-      let row_div = document.createElement("div");
-      row_div.className = "row";
+  let checker = document.getElementById('controller_switch');
+  checker.onchange = function () {
 
-      let col_div = document.createElement("div");
-      col_div.className = "one_column";
-
-      col_div.appendChild(a);
-      row_div.appendChild(col_div);
-      d.appendChild(row_div);
-
-      let controller_div = document.getElementById("controllers");
-      controller_div.appendChild(d);
-
-      document.getElementById("start").style.visibility = "hidden";
-
-      requestAnimation();
+    if (!!this.checked) {
+      show_controller();
+      enableListeners();
     }
-
-    function disconnecthandler(e) {
-      removegamepad(e.gamepad);
-      document.getElementById("start").style.visibility = "hidden";
-    }
-
-    function removegamepad(gamepad) {
-      cancelAnimation();
-      let controller_div = document.getElementById("controller_div");
-      let d = document.getElementById("controller" + gamepad.index);
-      if (d != null) {
-        controller_div.removeChild(d);
-      }
-      delete controllers[gamepad.index];
-      document.getElementById('controller_switch').checked = false;
+    else {
+      show_buttons();
       disableListeners();
     }
+  };
 
-    function updateStatus() {
+  function show_buttons() {
+    $('#collapsediv1').collapse('show');
+    $('#collapsediv2').collapse('hide');
+  }
 
-      let checker = document.getElementById('controller_switch');
-      if (!!checker.checked == false) {
-        console.log("switch is false");
-        return;
+  function show_controller() {
+    $('#collapsediv1').collapse('hide');
+    $('#collapsediv2').collapse('show');
+  }
+
+</script>
+{% endblock %}
+
+{% block javascript_rc %}
+<script>
+
+  let haveEvents = 'GamepadEvent' in window;
+  let haveWebkitEvents = 'WebKitGamepadEvent' in window;
+  const rAF = window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.requestAnimationFrame;
+
+  const cAF = window.mozCancelAnimationFrame ||
+    window.webkitCancelAnimation ||
+    window.cancelAnimationFrame;
+
+  const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
+  const fps = 10;
+
+  let controllers = {};
+  let globalID;
+  let fpsInterval = 1000 / fps;
+  let then = Date.now();
+
+  //TESTING
+  let enableController = false;
+
+  function connecthandler(e) {
+    console.log("CONNECTED.");
+    if (Object.keys(controllers).length == 0) {
+      addgamepad(e.gamepad);
+    }
+  }
+
+  function addgamepad(gamepad) {
+    controllers[gamepad.index] = gamepad;
+
+    let d = document.createElement("div");
+    d.setAttribute("id", "controller" + gamepad.index);
+
+    // var t = document.createElement("h2");
+    // t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+    // d.appendChild(t);
+
+    let a = document.createElement("div");
+    a.className = "axes";
+
+    for (i = 0; i < 4/*gamepad.axes.length*/; i++) {
+      e = document.createElement("meter");
+      e.className = "axis";
+      e.setAttribute("min", "-1");
+      e.setAttribute("max", "1");
+      e.setAttribute("value", "0");
+      e.innerHTML = i;
+
+      let f = document.createElement("div");
+      f.className = "axes_value";
+      f.innerHTML = i;
+
+      a.appendChild(f);
+      a.appendChild(e);
+    }
+
+    let row_div = document.createElement("div");
+    row_div.className = "row";
+
+    let col_div = document.createElement("div");
+    col_div.className = "one_column";
+
+    col_div.appendChild(a);
+    row_div.appendChild(col_div);
+    d.appendChild(row_div);
+
+    let controller_div = document.getElementById("controllers");
+    controller_div.appendChild(d);
+
+    requestAnimation();
+  }
+
+  function disconnecthandler(e) {
+    removegamepad(e.gamepad);
+  }
+
+  function removegamepad(gamepad) {
+    cancelAnimation();
+    let controllers_div = document.getElementById("controllers");
+    let d = document.getElementById("controller" + gamepad.index);
+    if (d != null) {
+      controllers_div.removeChild(d);
+    }
+    delete controllers[gamepad.index];
+    document.getElementById('controller_switch').checked = false;
+    show_buttons();
+    disableListeners();
+  }
+
+  function updateStatus() {
+
+    let checker = document.getElementById('controller_switch');
+    if (!!checker.checked == false) {
+      console.log("switch is false");
+      return;
+    }
+
+    scangamepads();
+
+    let axes_dict = {};
+
+    for (j in controllers) {
+
+      let controller = controllers[j];
+      let d = document.getElementById("controller" + j);
+
+      let axes = d.getElementsByClassName("axis");
+      let axes_values = d.getElementsByClassName("axes_value");
+      for (let i = 0; i < 4/*controller.axes.length*/; i++) {
+
+        let a = axes[i];
+        a.innerHTML = axes_name[i] + ": " + controller.axes[i].toFixed(2);
+        a.setAttribute("value", controller.axes[i].toFixed(2));
+
+        let f = axes_values[i];
+        f.textContent = a.innerHTML;
+
+        axes_dict[axes_name[i]] = controller.axes[i].toFixed(2);
+      }
+    }
+
+    sendCommand(axes_dict);
+    requestAnimation();
+  }
+
+  function sendCommand(axes_dict) {
+
+    now = Date.now();
+    elapsed = now - then;
+
+    if (elapsed > fpsInterval) {
+      then = now - (elapsed % fpsInterval);
+
+      let velocity = document.getElementById("velocity").value;
+      let degrees = document.getElementById("degrees").value;
+
+      const command = {
+        btn_pressed: "",
+        velocity: velocity,
+        degrees: degrees,
+        axes: axes_dict
       }
 
-      scangamepads();
+      exec_command(commandUrl, command);
+    }
+  }
 
-      let axes_dict = {};
+  function scangamepads() {
+    let gamepads = navigator.getGamepads ? navigator.getGamepads() :
+      (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
 
-      for (j in controllers) {
-
-        let controller = controllers[j];
-        let d = document.getElementById("controller" + j);
-
-        let axes = d.getElementsByClassName("axis");
-        let axes_values = d.getElementsByClassName("axes_value");
-        for (let i = 0; i < 4/*controller.axes.length*/; i++) {
-
-          let a = axes[i];
-          a.innerHTML = axes_name[i] + ": " + controller.axes[i].toFixed(2);
-          a.setAttribute("value", controller.axes[i].toFixed(2));
-
-          let f = axes_values[i];
-          f.textContent = a.innerHTML;
-
-          axes_dict[axes_name[i]] = controller.axes[i].toFixed(2);
-        }
+    for (let i = 0; i < gamepads.length; i++) {
+      if (gamepads[i] && (gamepads[i].index in controllers)) {
+        controllers[gamepads[i].index] = gamepads[i];
       }
+    }
 
-      sendCommand(axes_dict);
+    if (enableController) {
+      // We enter this block only after 
+      // the first time the user deactivates the switch 
+      reEnableControllerInput();
+    }
+  }
+
+  /**
+   * re-enables input from the controller if 
+   * the switch is active and there are controllers 
+   * that are found to be already connected
+   */
+  function reEnableControllerInput() {
+
+    let checker = document.getElementById('controller_switch');
+    console.log("checker.checked: " + checker.checked + "\n" +
+      "controllers length: " + Object.keys(controllers).length + "\n" +
+      "enableController: " + enableController
+    );
+    if ((!!checker.checked) == true && Object.keys(controllers).length > 0) {
+
+      enableController = false;
+
+      // restart the animation by which
+      // we start taking controller input
       requestAnimation();
     }
+  }
 
-    function sendCommand(axes_dict){
+  function enableListeners() {
 
-      now = Date.now();
-      elapsed = now - then;
+    console.log("enableListeners");
 
-      if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
+    if (haveEvents) {
 
-        let velocity = document.getElementById("velocity").value;
-        let degrees = document.getElementById("degrees").value;
-
-        const command = {
-          btn_pressed: "",
-          velocity: velocity,
-          degrees: degrees,
-          axes: axes_dict
-        }
-
-        exec_command(commandUrl, command);
-      }
+      window.addEventListener("gamepadconnected", connecthandler);
+      window.addEventListener("gamepaddisconnected", disconnecthandler);
+    }
+    else if (haveWebkitEvents) {
+      window.addEventListener("webkitgamepadconnected", connecthandler);
+      window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
+    }
+    else {
+      setInterval(scangamepads, 500);
     }
 
-    function scangamepads() {
-      let gamepads = navigator.getGamepads ? navigator.getGamepads() :
-        (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        
-      for (let i = 0; i < gamepads.length; i++) {
-        if (gamepads[i] && (gamepads[i].index in controllers)) {
-          controllers[gamepads[i].index] = gamepads[i];
-        }
-      }
+    scangamepads();
+  }
 
-      if (enableController){
-        // We enter this block only after 
-        // the first time the user deactivates the switch 
-        reEnableControllerInput();
-      } 
+  function disableListeners() {
+
+    console.log("disableListeners");
+
+    // the next time the switch is active, this boolean
+    // will be used to re-enable controller's input
+    enableController = true;
+
+    if (haveEvents) {
+      window.removeEventListener("gamepadconnected", connecthandler);
+      window.removeEventListener("gamepaddisconnected", disconnecthandler);
+    }
+    else if (haveWebkitEvents) {
+      window.removeEventListener("webkitgamepadconnected", connecthandler);
+      window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
+    }
+    else {
+      clearInterval(scangamepads);
     }
 
-    /**
-     * re-enables input from the controller if 
-     * the switch is active and there are controllers 
-     * that are found to be already connected
-     */
-    function reEnableControllerInput(){
+    cancelAnimation();
+  }
 
-      let checker = document.getElementById('controller_switch');
-      console.log("checker.checked: " + checker.checked + "\n" +
-                  "controllers length: " + Object.keys(controllers).length + "\n" +
-                  "enableController: " + enableController
-                  );
-      if((!!checker.checked) == true && Object.keys(controllers).length > 0) {
+  function requestAnimation() {
 
-        changeControllerVisibility(true);
-        enableController = false;
+    console.log("Requesting AnimationFrame...");
+    globalID = rAF(updateStatus);
+    //globalID = window.requestAnimationFrame(updateStatus);
+  }
 
-        // restart the animation by which
-        // we start taking controller input
-        requestAnimation();
+  function cancelAnimation() {
+    console.log("Cancelling AnimationFrame...");
+    cAF(globalID);
+    //window.cancelAnimationFrame(globalID);
+  }
 
-        document.getElementById("start").style.visibility = "hidden";
-      }
-    }
-
-    function changeControllerVisibility(isVisible){
-
-      let visibility = "";
-      if (isVisible){
-        visibility = "visible";
-      }
-      else{
-        visibility = "hidden";
-      }
-
-      for (j in controllers) {
-        document.getElementById("controller" + j).style.visibility = visibility;
-      }
-    }
-
-    function enableListeners() {
-
-      console.log("enableListeners");
-
-      if (haveEvents) {
-
-        window.addEventListener("gamepadconnected", connecthandler); 
-        window.addEventListener("gamepaddisconnected", disconnecthandler);
-      }
-      else if (haveWebkitEvents) {
-        window.addEventListener("webkitgamepadconnected", connecthandler);
-        window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
-      }
-      else {
-        setInterval(scangamepads, 500);
-      }
-
-      scangamepads();
-    }
-
-    function disableListeners() {
-
-      console.log("disableListeners");
-
-      changeControllerVisibility(false);
-
-      // the next time the switch is active, this boolean
-      // will be used to re-enable controller's input
-      enableController = true;
-
-      if (haveEvents) {
-        window.removeEventListener("gamepadconnected", connecthandler);
-        window.removeEventListener("gamepaddisconnected", disconnecthandler);
-      }
-      else if (haveWebkitEvents) {
-        window.removeEventListener("webkitgamepadconnected", connecthandler);
-        window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
-      }
-      else {
-        clearInterval(scangamepads);
-      }
-
-      cancelAnimation();
-    }
-
-    function requestAnimation(){
-
-      console.log("Requesting AnimationFrame...");
-      globalID = rAF(updateStatus);
-      //globalID = window.requestAnimationFrame(updateStatus);
-    }
-
-    function cancelAnimation() {
-      console.log("Cancelling AnimationFrame...");
-      cAF(globalID);
-      //window.cancelAnimationFrame(globalID);
-    }
-
-  </script>
-  {% endblock %}
+</script>
+{% endblock %}
