@@ -212,7 +212,8 @@
     window.webkitCancelAnimation ||
     window.cancelAnimationFrame;
 
-  const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" }
+  const std_gamepad_axes_name = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
+  const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
   const fps = 10;
 
   let controllers = {};
@@ -225,6 +226,9 @@
 
   function connecthandler(e) {
     console.log("CONNECTED.");
+
+    console.log("mapping: <" + e.gamepad.mapping + ">");
+
     if (Object.keys(controllers).length == 0) {
       addgamepad(e.gamepad);
     }
@@ -314,13 +318,13 @@
       for (let i = 0; i < 4/*controller.axes.length*/; i++) {
 
         let a = axes[i];
-        a.innerHTML = axes_name[i] + ": " + controller.axes[i].toFixed(2);
+        a.innerHTML = std_gamepad_axes_name[i] + ": " + controller.axes[i].toFixed(2);
         a.setAttribute("value", controller.axes[i].toFixed(2));
 
         let f = axes_values[i];
         f.textContent = a.innerHTML;
 
-        axes_dict[axes_name[i]] = controller.axes[i].toFixed(2);
+        axes_dict[std_gamepad_axes_name[i]] = controller.axes[i].toFixed(2);
       }
     }
 
