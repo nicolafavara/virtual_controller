@@ -25,35 +25,37 @@
         </div>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col text-center">
-        <button id="button_guided" type="button" class="btn3d btn btn-default btn-lg">Guided<br>mode</button>
-      </div>
-      <div class="col  text-center">
-        <button id="button_arm" type="button" class="btn3d btn btn-default btn-lg">Arm</button>
-      </div>
-      <div class="col  text-center">
-        <button id="button_takeoff" type="button" class="btn3d btn btn-default btn-lg">Takeoff</button>
-      </div>
-      <div class="col  text-center">
-        <button id="button_land" type="button" class="btn3d btn btn-default btn-lg">Land<br>Mode</button>
-      </div>
-    </div>
-    <br>
   </div>
 
+  <div class="row">
+    <div class="col text-center">
+      <button id="button_guided" type="button" class="btn3d btn btn-default btn-lg">Guided<br>mode</button>
+    </div>
+    <div class="col  text-center">
+      <button id="button_arm" type="button" class="btn3d btn btn-default btn-lg">Arm</button>
+    </div>
+    <div class="col  text-center">
+      <button id="button_takeoff" type="button" class="btn3d btn btn-default btn-lg">Takeoff</button>
+    </div>
+    <div class="col  text-center">
+      <button id="button_land" type="button" class="btn3d btn btn-default btn-lg">Land<br>Mode</button>
+    </div>
+  </div>
+  <br>
   <div class="row">
     <div class="col">
       <label for="degrees" class="form-label">Degrees for yaw:</label>
       <input type="range" class="form-range" id="degrees" oninput="this.nextElementSibling.value = this.value" min="0"
-        max="360" value="0">
+        max="25" value="0">
       <output>0</output>
     </div>
+  </div>
+  <br>
+  <div class="row">
     <div class="col">
       <label for="velocity" class="form-label">Velocity(m/s):</label>
       <input type="range" class="form-range" id="velocity" oninput="this.nextElementSibling.value = this.value" min="0"
-        max="30" value="0">
+        max="15" value="0">
       <output>0</output>
     </div>
   </div>
@@ -71,15 +73,128 @@
 
   <br><br>
 
+
   <div class="collapse" id="collapsediv2">
     <div class="row text-center">
       <div id="controller_div" class="col">
-        <h2 id="start">Press a button on your controller to start</h2>
+        <h2 id="start">Move a stick on your controller to start.</h2>
         <br>
         <div id="controllers"></div>
       </div>
     </div>
+
+    <br><br>
+
+    <div class="row text-center
+      <div class=" col">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="center_stick" value="center" checked>
+        <label class="form-check-label" for="center_stick">
+          Center stick is zero throttle
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="full_down_stick" value="full_down">
+        <label class="form-check-label" for="full_down_stick">
+          Full down stick is zero throttle
+        </label>
+      </div>
+    </div>
   </div>
+
+
+  <br><br>
+
+  <div class="row text-center">
+    <div class="col">
+
+      <!-- Example Code -->
+      <div class="modal fade" id="axis_modal_0" aria-labelledby="axis_modal_Label" tabindex="-1" style="display: none;"
+        aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="axis_modal_Label_0">Yaw axis</h5>
+            </div>
+            <div class="modal-body">
+              Move the stick along the axis you want to associate to Yaw.
+            </div>
+            <div class="modal-footer">
+              <button id="btn_cancel_0" type="button" class="btn btn-secondary cancel-btn"
+                data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" data-bs-target="#axis_modal_1" data-bs-toggle="modal" id="btn_modal_0"
+                disabled="true">Proceed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="axis_modal_1" aria-labelledby="axis_modal_Label_1" tabindex="-1"
+        style="display: none;" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="axis_modal_Label_1">Throttle axis</h5>
+            </div>
+            <div class="modal-body">
+              Move the stick along the axis you want to associate to Throttle.
+            </div>
+            <div class="modal-footer">
+              <button id="btn_cancel_1" type="button" class="btn btn-secondary cancel-btn"
+                data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" data-bs-target="#axis_modal_2" data-bs-toggle="modal" id="btn_modal_1"
+                disabled="true">Proceed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="axis_modal_2" aria-labelledby="axis_modal_Label_2" tabindex="-1"
+        style="display: none;" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="axis_modal_Label_2">Roll axis</h5>
+            </div>
+            <div class="modal-body">
+              Move the stick along the axis you want to associate to Roll.
+            </div>
+            <div class="modal-footer">
+              <button id="btn_cancel_2" type="button" class="btn btn-secondary cancel-btn"
+                data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" data-bs-target="#axis_modal_3" data-bs-toggle="modal" id="btn_modal_2"
+                disabled="true">Proceed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="axis_modal_3" aria-labelledby="axis_modal_Label_3" tabindex="-1"
+        style="display: none;" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="axis_modal_Label_3">Pitch axis</h5>
+            </div>
+            <div class="modal-body">
+              Move the stick along the axis you want to associate to Pitch.
+            </div>
+            <div class="modal-footer">
+              <button id="btn_cancel_3" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" data-bs-dismiss="modal" disabled="true" id="btn_modal_3">Proceed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="start_modal_button" type="button" disabled="true">
+        Configure controller axes
+      </button>
+
+      <div id="mapping">
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <br>
+
 </section>
 {% endblock content %}
 
@@ -212,30 +327,214 @@
     window.webkitCancelAnimation ||
     window.cancelAnimationFrame;
 
-  const std_gamepad_axes_name = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
-  const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
+  const std_mapping_axes = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
+
+  // Taranis remote controller's mapping
+  //const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
+
   const fps = 10;
 
-  let controllers = {};
-  let globalID;
-  let fpsInterval = 1000 / fps;
-  let then = Date.now();
+  const set_mapping_url = `${location.origin}{% url 'set_mapping' %}`;
 
-  //TESTING
+  const fpsInterval = 1000 / fps;
+  const controllers = {};
+  let globalID;
+  let then = Date.now();
   let enableController = false;
+  let controller_calibrated = false;
+
+  // -> Region attributes for calibration 
+
+  const axis_names = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" }
+  let current_mapping = { 0: "", 1: "", 2: "", 3: "" }
+  let current_axis = "";
+  let current_modal = -1;
+
+  let max_value_flag = false;
+  let max_axis_value = -1;
+  let min_value_flag = false;
+  let min_axis_value = -2;
+
+  let center_stick_flag = true;
+
+  // -> End region
+
+  // add listener to checkbox 
+  let checked_val = document.querySelector('input[name="exampleRadios"]:checked').value;
+  if (document.querySelector('input[name="exampleRadios"]')) {
+    document.querySelectorAll('input[name="exampleRadios"]').forEach((elem) => {
+      elem.addEventListener("change", function (event) {
+        var item = event.target.value;
+
+        center_stick_flag = (item == "center");
+      });
+    });
+  }
+
+  // -> Region functions for modal management
+  //    (used for calibration) 
+
+  let btn = document.getElementById("start_modal_button");
+  btn.addEventListener("click", function () {
+
+    $("#axis_modal_0").modal("show");
+  });
+
+  let modals = document.querySelectorAll('div[id^=axis_modal_]');
+  modals.forEach(btn => btn.addEventListener('shown.bs.modal', () => {
+
+    let n = btn.id.split('_')[2];
+    current_modal = n;
+    current_axis = axis_names[n];
+    requestAnimation(updateCalibrationStatus);
+  }));
+  modals.forEach(btn => btn.addEventListener('hide.bs.modal', () => {
+
+    cancelAnimation();
+    current_axis = "";
+  }));
+
+  const btn_modal_3 = document.getElementById("btn_modal_3");
+  btn_modal_3.addEventListener('click', () => {
+
+    var d = document.getElementById("mapping");
+    var t = document.createElement("h2");
+    t.appendChild(document.createTextNode(JSON.stringify(current_mapping)));
+    d.appendChild(t);
+
+    document.getElementById('start_modal_button').disabled = true;
+
+    if (Object.keys(controllers).length > 0) {
+
+      // save mapping to database
+      set_mapping(set_mapping_url, controllers[0].id, current_mapping);
+
+      addgamepad(controllers[0]);
+      controller_calibrated = true;
+    }
+
+  });
+
+  const btns_cancel = document.querySelectorAll('button[id^=btn_cancel]');
+  btns_cancel.forEach(btn => btn.addEventListener("click", () => {
+
+    cancelAnimation();
+
+    current_mapping = { 0: "", 1: "", 2: "", 3: "" }
+    current_axis = "";
+    current_modal = -1;
+
+    max_value_flag = false;
+    max_axis_value = -1;
+    min_value_flag = false;
+    min_axis_value = -2;
+
+    for (let i = 0; i < 4; i++) {
+      document.getElementById("btn_modal_" + i).disabled = true;
+    }
+  }));
+
+
+  function updateCalibrationStatus() {
+    scangamepads();
+
+    let j;
+    for (j in controllers) {
+      print = false;
+      const controller = controllers[j];
+      for (let i = 0; i < controller.axes.length; i++) {
+
+        if (controller.axes[i].toFixed(4) == parseFloat(1).toFixed(4)) {
+
+          max_axis_value = i;
+          max_value_flag = true;
+        }
+        else if (controller.axes[i].toFixed(4) == parseFloat(-1).toFixed(4)) {
+
+          min_axis_value = i;
+          min_value_flag = true;
+        }
+      }
+    }
+
+    if (min_value_flag && max_value_flag && max_axis_value == min_axis_value) {
+
+      //alert("current_mapping[max_axis_value] = " + current_mapping[max_axis_value]);
+
+      if (current_mapping[max_axis_value] === "") {
+
+        document.getElementById("btn_modal_" + current_modal).disabled = false;
+        //alert(current_axis + " associated with " + min_axis_value);
+        current_mapping[max_axis_value] = current_axis;
+        cancelAnimation();
+        current_axis = "";
+        return;
+      }
+    }
+
+    requestAnimation(updateCalibrationStatus);
+  }
+
+  // --> End modal region
 
   function connecthandler(e) {
     console.log("CONNECTED.");
 
-    console.log("mapping: <" + e.gamepad.mapping + ">");
-
     if (Object.keys(controllers).length == 0) {
-      addgamepad(e.gamepad);
+      // console.log("e.gamepad.id: ", e.gamepad);
+      controllers[e.gamepad.index] = e.gamepad;
     }
+    else {
+      return;
+    }
+
+    if (e.gamepad.mapping == "standard") {
+
+      current_mapping = std_mapping_axes;
+      addgamepad(e.gamepad);
+      controller_calibrated = true;
+      return;
+    }
+
+    requestMapping(e.gamepad);
+  }
+
+  function requestMapping(gamepad) {
+
+    const get_mapping_url = "{% url 'get_mapping' 'str' %}".replace('str', gamepad.id)
+    get_mapping(get_mapping_url)
+      .then(value => {
+
+        if (value.data === null || value.data === undefined) {
+
+          // show modals button to start calibration 
+          document.getElementById('start_modal_button').disabled = false;
+        }
+        else {
+
+          let m = JSON.parse(value.data)
+          let name = m.controller_name;
+          let yaw_axis = m.yaw_axis;
+          let roll_axis = m.roll_axis;
+          let throttle_axis = m.throttle_axis;
+          let pitch_axis = m.pitch_axis;
+
+          // set value as current mapping
+          current_mapping[yaw_axis] = "yaw";
+          current_mapping[roll_axis] = "roll";
+          current_mapping[throttle_axis] = "throttle";
+          current_mapping[pitch_axis] = "pitch";
+
+          // alert(JSON.stringify(current_mapping));
+          addgamepad(gamepad);
+          controller_calibrated = true;
+        }
+
+      });
   }
 
   function addgamepad(gamepad) {
-    controllers[gamepad.index] = gamepad;
+    //controllers[gamepad.index] = gamepad;
 
     let d = document.createElement("div");
     d.setAttribute("id", "controller" + gamepad.index);
@@ -276,7 +575,7 @@
     let controller_div = document.getElementById("controllers");
     controller_div.appendChild(d);
 
-    requestAnimation();
+    requestAnimation(updateStatus);
   }
 
   function disconnecthandler(e) {
@@ -285,6 +584,7 @@
 
   function removegamepad(gamepad) {
     cancelAnimation();
+
     let controllers_div = document.getElementById("controllers");
     let d = document.getElementById("controller" + gamepad.index);
     if (d != null) {
@@ -294,6 +594,8 @@
     document.getElementById('controller_switch').checked = false;
     show_buttons();
     disableListeners();
+    controller_calibrated = false;
+    console.log("controller_calibrated: " + controller_calibrated);
   }
 
   function updateStatus() {
@@ -311,25 +613,43 @@
     for (j in controllers) {
 
       let controller = controllers[j];
+
       let d = document.getElementById("controller" + j);
 
       let axes = d.getElementsByClassName("axis");
       let axes_values = d.getElementsByClassName("axes_value");
       for (let i = 0; i < 4/*controller.axes.length*/; i++) {
 
+        let val = controller.axes[i].toFixed(2);
+
+        // controllers with standard mapping provide, for vertical axes,
+        // negarive values by moving the stick up and positive values 
+        // by moving the stick down. On the other hand, if the mapping
+        // is not standard, the behavior is opposite. 
+        // Therefore we change the sign of the values read 
+        // on the two vertical axes if we are in standard
+        if (controller.mapping == "standard" && (current_mapping[i] == "throttle" || current_mapping[i] == "pitch")) {
+          val = (val * (-1)).toFixed(2);
+        }
+
+        if (center_stick_flag == false && current_mapping[i] == "throttle") {
+          val = ((parseFloat(val) + 1.00) / 2.00).toFixed(2);
+          console.log(val);
+        }
+
         let a = axes[i];
-        a.innerHTML = std_gamepad_axes_name[i] + ": " + controller.axes[i].toFixed(2);
-        a.setAttribute("value", controller.axes[i].toFixed(2));
+        a.innerHTML = current_mapping[i] + ": " + val;
+        a.setAttribute("value", val);
 
         let f = axes_values[i];
         f.textContent = a.innerHTML;
 
-        axes_dict[std_gamepad_axes_name[i]] = controller.axes[i].toFixed(2);
+        axes_dict[current_mapping[i]] = val;
       }
     }
 
     sendCommand(axes_dict);
-    requestAnimation();
+    requestAnimation(updateStatus);
   }
 
   function sendCommand(axes_dict) {
@@ -379,23 +699,17 @@
   function reEnableControllerInput() {
 
     let checker = document.getElementById('controller_switch');
-    console.log("checker.checked: " + checker.checked + "\n" +
-      "controllers length: " + Object.keys(controllers).length + "\n" +
-      "enableController: " + enableController
-    );
-    if ((!!checker.checked) == true && Object.keys(controllers).length > 0) {
+    if ((!!checker.checked) == true && Object.keys(controllers).length > 0 && controller_calibrated == true) {
 
       enableController = false;
 
       // restart the animation by which
       // we start taking controller input
-      requestAnimation();
+      requestAnimation(updateStatus);
     }
   }
 
   function enableListeners() {
-
-    console.log("enableListeners");
 
     if (haveEvents) {
 
@@ -414,8 +728,6 @@
   }
 
   function disableListeners() {
-
-    console.log("disableListeners");
 
     // the next time the switch is active, this boolean
     // will be used to re-enable controller's input
@@ -436,17 +748,15 @@
     cancelAnimation();
   }
 
-  function requestAnimation() {
+  function requestAnimation(fun) {
 
     console.log("Requesting AnimationFrame...");
-    globalID = rAF(updateStatus);
-    //globalID = window.requestAnimationFrame(updateStatus);
+    globalID = rAF(fun);
   }
 
   function cancelAnimation() {
     console.log("Cancelling AnimationFrame...");
     cAF(globalID);
-    //window.cancelAnimationFrame(globalID);
   }
 
 </script>
