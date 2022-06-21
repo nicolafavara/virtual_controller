@@ -31,20 +31,20 @@
     <div class="col text-center">
       <button id="button_guided" type="button" class="btn3d btn btn-default btn-lg">Guided<br>mode</button>
     </div>
-    <div class="col  text-center">
+    <div class="col text-center">
       <button id="button_arm" type="button" class="btn3d btn btn-default btn-lg">Arm</button>
     </div>
-    <div class="col  text-center">
+    <div class="col text-center">
       <button id="button_takeoff" type="button" class="btn3d btn btn-default btn-lg">Takeoff</button>
     </div>
-    <div class="col  text-center">
+    <div class="col text-center">
       <button id="button_land" type="button" class="btn3d btn btn-default btn-lg">Land<br>Mode</button>
     </div>
   </div>
   <br>
   <div class="row">
     <div class="col">
-      <label for="degrees" class="form-label">Degrees for yaw:</label>
+      <label for="degrees" class="form-label">Yaw rate (degrees/s):</label>
       <input type="range" class="form-range" id="degrees" oninput="this.nextElementSibling.value = this.value" min="0"
         max="25" value="0">
       <output>0</output>
@@ -107,17 +107,15 @@
 
     <div class="row text-center">
       <div class="col">
-
-        <!-- Example Code -->
         <div class="modal fade" id="axis_modal_0" aria-labelledby="axis_modal_Label" tabindex="-1"
           style="display: none;" aria-hidden="true" data-bs-backdrop="static">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="axis_modal_Label_0">Yaw axis</h5>
+                <h5 class="modal-title" id="axis_modal_Label_0">Yaw axis calibration</h5>
               </div>
               <div class="modal-body">
-                Move the stick along the axis you want to associate to Yaw.
+                Move the stick along the whole axis you want to associate to Yaw.
               </div>
               <div class="modal-footer">
                 <button id="btn_cancel_0" type="button" class="btn btn-secondary cancel-btn"
@@ -133,10 +131,10 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="axis_modal_Label_1">Throttle axis</h5>
+                <h5 class="modal-title" id="axis_modal_Label_1">Throttle axis calibration</h5>
               </div>
               <div class="modal-body">
-                Move the stick along the axis you want to associate to Throttle.
+                Move the stick along the whole axis you want to associate to Throttle.
               </div>
               <div class="modal-footer">
                 <button id="btn_cancel_1" type="button" class="btn btn-secondary cancel-btn"
@@ -152,10 +150,10 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="axis_modal_Label_2">Roll axis</h5>
+                <h5 class="modal-title" id="axis_modal_Label_2">Roll axis calibration</h5>
               </div>
               <div class="modal-body">
-                Move the stick along the axis you want to associate to Roll.
+                Move the stick along the whole axis you want to associate to Roll.
               </div>
               <div class="modal-footer">
                 <button id="btn_cancel_2" type="button" class="btn btn-secondary cancel-btn"
@@ -171,10 +169,10 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="axis_modal_Label_3">Pitch axis</h5>
+                <h5 class="modal-title" id="axis_modal_Label_3">Pitch axis calibration</h5>
               </div>
               <div class="modal-body">
-                Move the stick along the axis you want to associate to Pitch.
+                Move the stick along the whole axis you want to associate to Pitch.
               </div>
               <div class="modal-footer">
                 <button id="btn_cancel_3" type="button" class="btn btn-secondary"
@@ -185,8 +183,8 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" id="start_modal_button" type="button">
-          Configure controller axes
+        <button class="btn btn-warning" id="start_modal_button" type="button">
+          New controller detected, click here to start calibration
         </button>
 
         <div id="mapping">
@@ -508,6 +506,7 @@
 
           console.log("button visible.");
           // show modals button to start calibration
+          document.getElementById('start').style.display = "none";
           document.getElementById('start_modal_button').style.display = "inline";
         }
         else {
