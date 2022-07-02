@@ -10,9 +10,8 @@ def controller(request):
     return render(request, 'controller/controller.html')
 
 def command(request):
-    # request.is_ajax() is deprecated since django 3.1
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax:
 
         if request.method == 'POST':
@@ -27,8 +26,8 @@ def command(request):
 
 
 def set_mapping(request):
+    
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-
     if is_ajax:
 
         if request.method == 'POST':
@@ -50,16 +49,17 @@ def set_mapping(request):
 
 
 def get_mapping(request, name):
+
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-
-    print("get_mapping")
-
     if is_ajax:
-        print("is_ajax")
         if request.method == 'GET':
-            print("GET request")
+
             try:
                 response = Mapping.objects.get(controller_name=name)
                 return JsonResponse({'status': 'mapping found', 'data': response.toJson()});
             except Mapping.DoesNotExist:
                 return JsonResponse({'status': 'mapping not found.', 'data': None})
+    
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+    else:
+        return HttpResponseBadRequest('Invalid request')
