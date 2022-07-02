@@ -201,6 +201,7 @@
 {% block js %}
 <script>
   const commandUrl = "{% url 'command' %}";
+  const set_mapping_url = `${location.origin}{% url 'set_mapping' %}`;
   let mappingUrl = "{% url 'get_mapping' 'str' %}";
 
 </script>

@@ -15,9 +15,6 @@ const std_mapping_axes = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
 //const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
 
 const fps = 10;
-
-const set_mapping_url = `${location.origin}{% url 'set_mapping' %}`;
-
 const fpsInterval = 1000 / fps;
 const controllers = {};
 let globalID;
