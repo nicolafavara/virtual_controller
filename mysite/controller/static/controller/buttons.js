@@ -45,7 +45,7 @@ function send_direction_command(btn_id) {
 
     timer = setInterval(function () {
         exec_command(commandUrl, command);
-    }, 1000); corretto
+    }, 1000);
 }
 
 function send_command(btn_id) {
