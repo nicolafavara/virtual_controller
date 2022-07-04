@@ -76,7 +76,7 @@
   <div class="collapse" id="collapsediv2">
     <div class="row text-center">
       <div id="controller_div" class="col">
-        <h2 id="start">Move a stick on your controller to start.</h2>
+        <h2 id="start">No controller detected. <br> Move a stick on your controller to start.</h2>
         <br>
         <div id="controllers"></div>
       </div>
@@ -87,13 +87,13 @@
     <div class="row text-center
       <div class=" col">
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="center_stick" value="center" checked>
+        <input class="form-check-input" type="radio" name="throttle_stick_radio" id="center_stick" value="center" checked>
         <label class="form-check-label" for="center_stick">
           Center stick is zero throttle
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="full_down_stick" value="full_down">
+        <input class="form-check-input" type="radio" name="throttle_stick_radio" id="full_down_stick" value="full_down">
         <label class="form-check-label" for="full_down_stick">
           Full down stick is zero throttle
         </label>
@@ -184,7 +184,7 @@
           New controller detected, click here to start calibration
         </button>
 
-        <button class="btn btn-primary" id="start_controller_commands" type="button">
+        <button class="btn btn-primary" id="start_rc_commands_button" style="display: none;" type="button">
           Everything's ready, press to start
         </button>
 

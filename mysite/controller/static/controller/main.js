@@ -18,8 +18,8 @@ function getCookie(name) {
 
 function exec_command(url, cmd) {
 
-  console.log(JSON.stringify(cmd));
-  //alert("sending command.")
+  console.log(cmd);
+  
   fetch(url, {
     method: "POST",
     credentials: "same-origin",
@@ -35,10 +35,8 @@ function exec_command(url, cmd) {
     });
 }
 
-function get_mapping(url, ) {
+function get_mapping(url) {
 
-  // const endpoint = new URL(url);
-  // endpoint.search = new URLSearchParams({name: name});
   console.log(url);
 
   return fetch(url, {
@@ -53,15 +51,12 @@ function get_mapping(url, ) {
       return response.json()
     })
     .then(data => {
-      //data.json();
       console.log("data: ", data);
       return data;
     });
 }
 
 function set_mapping(url, name, mapping) {
-
-  //mapping = { 0: "", 1: "", 2: "", 3: "" }
 
   fetch(url, {
     method: "POST",

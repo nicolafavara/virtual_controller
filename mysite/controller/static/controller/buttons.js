@@ -93,27 +93,3 @@ btns.forEach(btn => {
         exec_command(commandUrl, command);
     });
 });
-
-let checker = document.getElementById('controller_switch');
-checker.onchange = function () {
-
-    if (!!this.checked) {
-        document.getElementById('start_modal_button').style.display = 'none';
-        show_controller();
-        enableListeners();
-    }
-    else {
-        show_buttons();
-        disableListeners();
-    }
-};
-
-function show_buttons() {
-    $('#collapsediv1').collapse('show');
-    $('#collapsediv2').collapse('hide');
-}
-
-function show_controller() {
-    $('#collapsediv1').collapse('hide');
-    $('#collapsediv2').collapse('show');
-}

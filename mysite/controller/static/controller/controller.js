@@ -10,38 +10,75 @@ const cAF = window.mozCancelAnimationFrame ||
     window.cancelAnimationFrame;
 
 const std_mapping_axes = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
-
 // Taranis remote controller's mapping
 //const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
 
-const fps = 10;
+const fps = 5;
 const fpsInterval = 1000 / fps;
 const controllers = {};
 let globalID;
 let then = Date.now();
 let enableController = false;
 let controller_calibrated = false;
-
-// -> Region attributes for calibration 
-
-const axis_names = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" }
-let current_mapping = { 0: "", 1: "", 2: "", 3: "" }
-let current_axis = "";
-let current_modal = -1;
-
-let max_value_flag = false;
-let max_axis_value = -1;
-let min_value_flag = false;
-let min_axis_value = -2;
-
 let center_stick_flag = true;
 
-// -> End region
+
+let checker = document.getElementById('controller_switch');
+checker.onchange = function () {
+
+    if (!!this.checked) {
+        document.getElementById('start_modal_button').style.display = 'none';
+        show_controller();
+        enableListeners();
+    }
+    else {
+        show_buttons();
+        // the user has disabled the controller mode from the switch.
+        // Next time switch is checked, this boolean
+        // will be used to re-enable controller's input
+        enableController = true;
+        disableListeners();
+    }
+};
+
+function show_buttons() {
+    $('#collapsediv1').collapse('show');
+    $('#collapsediv2').collapse('hide');
+}
+
+function show_controller() {
+    $('#collapsediv1').collapse('hide');
+    $('#collapsediv2').collapse('show');
+}
+
+const start_cmd_button = document.getElementById('start_rc_commands_button');
+start_cmd_button.addEventListener('click', function() {
+
+    if(Object.keys(controllers).length == 0){
+        return;
+    }
+    
+    if (enableController){
+        // if we are here, it's at least the second time
+        // the user activates the controller mode 
+        enableController = false;
+        requestAnimation(updateStatus);
+    }
+    else{
+        // if we are here, it's the first time user 
+        // activate controller mode, so we neet to
+        // add the gamepad to controllers array
+        let gamepad = controllers[0];
+        addgamepad(gamepad);
+    }
+
+    document.getElementById('start_rc_commands_button').style.display = "none";
+});
 
 // add listener to checkbox 
-let checked_val = document.querySelector('input[name="exampleRadios"]:checked').value;
-if (document.querySelector('input[name="exampleRadios"]')) {
-    document.querySelectorAll('input[name="exampleRadios"]').forEach((elem) => {
+let checked_val = document.querySelector('input[name="throttle_stick_radio"]:checked').value;
+if (document.querySelector('input[name="throttle_stick_radio"]')) {
+    document.querySelectorAll('input[name="throttle_stick_radio"]').forEach((elem) => {
         elem.addEventListener("change", function (event) {
             var item = event.target.value;
 
@@ -50,112 +87,10 @@ if (document.querySelector('input[name="exampleRadios"]')) {
     });
 }
 
-// -> Region functions for modal management
-//    (used for calibration) 
-
-let btn = document.getElementById("start_modal_button");
-btn.addEventListener("click", function () {
-
-    $("#axis_modal_0").modal("show");
-});
-
-let modals = document.querySelectorAll('div[id^=axis_modal_]');
-modals.forEach(btn => btn.addEventListener('shown.bs.modal', () => {
-
-    let n = btn.id.split('_')[2];
-    current_modal = n;
-    current_axis = axis_names[n];
-    requestAnimation(updateCalibrationStatus);
-}));
-modals.forEach(btn => btn.addEventListener('hide.bs.modal', () => {
-
-    cancelAnimation();
-    current_axis = "";
-}));
-
-const btn_modal_3 = document.getElementById("btn_modal_3");
-btn_modal_3.addEventListener('click', () => {
-
-    document.getElementById('start_modal_button').style.display = 'none';
-
-    if (Object.keys(controllers).length > 0) {
-
-        // save mapping to database
-        set_mapping(set_mapping_url, controllers[0].id, current_mapping);
-
-        addgamepad(controllers[0]);
-        controller_calibrated = true;
-    }
-
-});
-
-const btns_cancel = document.querySelectorAll('button[id^=btn_cancel]');
-btns_cancel.forEach(btn => btn.addEventListener("click", () => {
-
-    cancelAnimation();
-
-    current_mapping = { 0: "", 1: "", 2: "", 3: "" }
-    current_axis = "";
-    current_modal = -1;
-
-    max_value_flag = false;
-    max_axis_value = -1;
-    min_value_flag = false;
-    min_axis_value = -2;
-
-    for (let i = 0; i < 4; i++) {
-        document.getElementById("btn_modal_" + i).disabled = true;
-    }
-}));
-
-
-function updateCalibrationStatus() {
-    scangamepads();
-
-    let j;
-    for (j in controllers) {
-        print = false;
-        const controller = controllers[j];
-        for (let i = 0; i < controller.axes.length; i++) {
-
-            if (controller.axes[i].toFixed(4) == parseFloat(1).toFixed(4)) {
-
-                max_axis_value = i;
-                max_value_flag = true;
-            }
-            else if (controller.axes[i].toFixed(4) == parseFloat(-1).toFixed(4)) {
-
-                min_axis_value = i;
-                min_value_flag = true;
-            }
-        }
-    }
-
-    if (min_value_flag && max_value_flag && max_axis_value == min_axis_value) {
-
-        //alert("current_mapping[max_axis_value] = " + current_mapping[max_axis_value]);
-
-        if (current_mapping[max_axis_value] === "") {
-
-            document.getElementById("btn_modal_" + current_modal).disabled = false;
-            //alert(current_axis + " associated with " + min_axis_value);
-            current_mapping[max_axis_value] = current_axis;
-            cancelAnimation();
-            current_axis = "";
-            return;
-        }
-    }
-
-    requestAnimation(updateCalibrationStatus);
-}
-
-// --> End modal region
-
 function connecthandler(e) {
     console.log("CONNECTED.");
 
     if (Object.keys(controllers).length == 0) {
-        // console.log("e.gamepad.id: ", e.gamepad);
         controllers[e.gamepad.index] = e.gamepad;
     }
     else {
@@ -165,12 +100,16 @@ function connecthandler(e) {
     if (e.gamepad.mapping == "standard") {
 
         current_mapping = std_mapping_axes;
-        addgamepad(e.gamepad);
+        //addgamepad(e.gamepad);
         controller_calibrated = true;
         document.getElementById('start_modal_button').style.display = "none";
+        document.getElementById('start').style.display = "none";
+        document.getElementById('start_rc_commands_button').style.display = "inline";
         return;
     }
 
+    //else
+    
     requestMapping(e.gamepad);
 }
 
@@ -203,18 +142,19 @@ function requestMapping(gamepad) {
                 current_mapping[throttle_axis] = "throttle";
                 current_mapping[pitch_axis] = "pitch";
 
-                // alert(JSON.stringify(current_mapping));
-                addgamepad(gamepad);
+                //addgamepad(gamepad);
                 controller_calibrated = true;
 
                 document.getElementById('start_modal_button').style.display = "none";
+                document.getElementById('start').style.display = "none";
+                document.getElementById('start_rc_commands_button').style.display = "inline";
+
             }
 
         });
 }
 
 function addgamepad(gamepad) {
-    //controllers[gamepad.index] = gamepad;
 
     let d = document.createElement("div");
     d.setAttribute("id", "controller" + gamepad.index);
@@ -273,11 +213,18 @@ function removegamepad(gamepad) {
         controllers_div.removeChild(d);
     }
     delete controllers[gamepad.index];
+
+    // this command will not trigger the checkbox listener
     document.getElementById('controller_switch').checked = false;
+
     show_buttons();
-    disableListeners();
+    document.getElementById('start_modal_button').style.display = "none";
+    document.getElementById('start_rc_commands_button').style.display = "none";
+    document.getElementById('start').style.display = "inline";
+
     controller_calibrated = false;
-    console.log("controller_calibrated: " + controller_calibrated);
+    enableController = false;
+    disableListeners();
 }
 
 function updateStatus() {
@@ -367,6 +314,7 @@ function scangamepads() {
     }
 
     if (enableController) {
+
         // We enter this block only after 
         // the first time the user deactivates 
         // and re-activate the controller switch 
@@ -384,11 +332,12 @@ function reEnableControllerInput() {
     let checker = document.getElementById('controller_switch');
     if ((!!checker.checked) == true && Object.keys(controllers).length > 0 && controller_calibrated == true) {
 
-        enableController = false;
+        document.getElementById('start_rc_commands_button').style.display = "inline";
+        document.getElementById('start').style.display = "none";
 
         // restart the animation by which
         // we start taking controller input
-        requestAnimation(updateStatus);
+        //requestAnimation(updateStatus);
     }
 }
 
@@ -414,15 +363,15 @@ function disableListeners() {
 
     // the next time the switch is active, this boolean
     // will be used to re-enable controller's input
-    enableController = true;
+    //enableController = true;
 
     if (haveEvents) {
         window.removeEventListener("gamepadconnected", connecthandler);
-        window.removeEventListener("gamepaddisconnected", disconnecthandler);
+        //window.removeEventListener("gamepaddisconnected", disconnecthandler);
     }
     else if (haveWebkitEvents) {
         window.removeEventListener("webkitgamepadconnected", connecthandler);
-        window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
+        //window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
     }
     else {
         clearInterval(scangamepads);
