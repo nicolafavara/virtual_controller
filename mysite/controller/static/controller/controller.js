@@ -100,7 +100,6 @@ function connecthandler(e) {
     if (e.gamepad.mapping == "standard") {
 
         current_mapping = std_mapping_axes;
-        //addgamepad(e.gamepad);
         controller_calibrated = true;
         document.getElementById('start_modal_button').style.display = "none";
         document.getElementById('start').style.display = "none";
@@ -142,7 +141,6 @@ function requestMapping(gamepad) {
                 current_mapping[throttle_axis] = "throttle";
                 current_mapping[pitch_axis] = "pitch";
 
-                //addgamepad(gamepad);
                 controller_calibrated = true;
 
                 document.getElementById('start_modal_button').style.display = "none";
@@ -158,10 +156,6 @@ function addgamepad(gamepad) {
 
     let d = document.createElement("div");
     d.setAttribute("id", "controller" + gamepad.index);
-
-    // var t = document.createElement("h2");
-    // t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-    // d.appendChild(t);
 
     let a = document.createElement("div");
     a.className = "axes";
@@ -334,10 +328,6 @@ function reEnableControllerInput() {
 
         document.getElementById('start_rc_commands_button').style.display = "inline";
         document.getElementById('start').style.display = "none";
-
-        // restart the animation by which
-        // we start taking controller input
-        //requestAnimation(updateStatus);
     }
 }
 
@@ -367,11 +357,9 @@ function disableListeners() {
 
     if (haveEvents) {
         window.removeEventListener("gamepadconnected", connecthandler);
-        //window.removeEventListener("gamepaddisconnected", disconnecthandler);
     }
     else if (haveWebkitEvents) {
         window.removeEventListener("webkitgamepadconnected", connecthandler);
-        //window.removeEventListener("webkitgamepaddisconnected", disconnecthandler);
     }
     else {
         clearInterval(scangamepads);
