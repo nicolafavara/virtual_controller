@@ -31,21 +31,31 @@ modals.forEach(btn => btn.addEventListener('hide.bs.modal', () => {
 const btn_modal_3 = document.getElementById("btn_modal_3");
 btn_modal_3.addEventListener('click', () => {
 
-    document.getElementById('start_modal_button').style.display = 'none';
-
     if (Object.keys(controllers).length > 0) {
 
         // save mapping to database
-        set_mapping(set_mapping_url, controllers[0].id, current_mapping);
+        set_mapping(controllers[0].id, current_mapping);
 
-        addgamepad(controllers[0]);
+        document.getElementById('start_modal_button').style.display = "none";
+        document.getElementById('start').style.display = "none";
+        document.getElementById('start_rc_commands_button').style.display = "inline";
+
         controller_calibrated = true;
+    }
+    else{
+        // cancel calibration
+        cancelCalibration();
     }
 
 });
 
 const btns_cancel = document.querySelectorAll('button[id^=btn_cancel]');
 btns_cancel.forEach(btn => btn.addEventListener("click", () => {
+
+    cancelCalibration();
+}));
+
+function cancelCalibration() {
 
     cancelAnimation();
 
@@ -61,7 +71,7 @@ btns_cancel.forEach(btn => btn.addEventListener("click", () => {
     for (let i = 0; i < 4; i++) {
         document.getElementById("btn_modal_" + i).disabled = true;
     }
-}));
+}
 
 
 function updateCalibrationStatus() {

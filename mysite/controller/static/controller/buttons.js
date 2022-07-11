@@ -17,10 +17,10 @@ function send_yaw_command(btn_id) {
         axes: null
     };
 
-    exec_command(commandUrl, command);
+    send_command(commandUrl, command);
 
     timer = setInterval(function () {
-        exec_command(commandUrl, command);
+        send_command(commandUrl, command);
     }, 1000);
 }
 
@@ -41,14 +41,14 @@ function send_direction_command(btn_id) {
         axes: null
     };
 
-    exec_command(commandUrl, command);
+    send_command(commandUrl, command);
 
     timer = setInterval(function () {
-        exec_command(commandUrl, command);
+        send_command(commandUrl, command);
     }, 1000);
 }
 
-function send_command(btn_id) {
+function send_other_command(btn_id) {
 
     btn_pressed = btn_id.split('_')[1];
 
@@ -60,7 +60,7 @@ function send_command(btn_id) {
     };
 
     //alert(command["btn_pressed"]);
-    exec_command(commandUrl, command);
+    send_command(commandUrl, command);
 }
 
 
@@ -74,7 +74,7 @@ yaw_btns.forEach(btn => btn.addEventListener("mousedown", () =>
 
 const buttons = document.querySelectorAll('button[id^=button]');
 buttons.forEach(btn => btn.addEventListener("mousedown", () =>
-    send_command(btn.id)));
+    send_other_command(btn.id)));
 
 const btns = document.querySelectorAll('button[id^=btn]');
 btns.forEach(btn => {
@@ -90,6 +90,6 @@ btns.forEach(btn => {
             yaw_rate: 0,
             axes: null
         }
-        exec_command(commandUrl, command);
+        send_command(commandUrl, command);
     });
 });

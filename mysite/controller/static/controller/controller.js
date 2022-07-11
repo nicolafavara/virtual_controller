@@ -18,8 +18,8 @@ const fpsInterval = 1000 / fps;
 const controllers = {};
 let globalID;
 let then = Date.now();
-let enableController = false;
-let controller_calibrated = false;
+let isControllerAlreadySet = false;
+let controller_calibrated = false; //TODO CHECK
 let center_stick_flag = true;
 
 
@@ -36,7 +36,7 @@ checker.onchange = function () {
         // the user has disabled the controller mode from the switch.
         // Next time switch is checked, this boolean
         // will be used to re-enable controller's input
-        enableController = true;
+        isControllerAlreadySet = true;
         disableListeners();
     }
 };
@@ -58,10 +58,10 @@ start_cmd_button.addEventListener('click', function() {
         return;
     }
     
-    if (enableController){
+    if (isControllerAlreadySet){
         // if we are here, it's at least the second time
         // the user activates the controller mode 
-        enableController = false;
+        isControllerAlreadySet = false;
         requestAnimation(updateStatus);
     }
     else{
@@ -217,7 +217,7 @@ function removegamepad(gamepad) {
     document.getElementById('start').style.display = "inline";
 
     controller_calibrated = false;
-    enableController = false;
+    isControllerAlreadySet = false;
     disableListeners();
 }
 
@@ -271,11 +271,11 @@ function updateStatus() {
         }
     }
 
-    sendCommand(axes_dict);
+    sendInfo(axes_dict);
     requestAnimation(updateStatus);
 }
 
-function sendCommand(axes_dict) {
+function sendInfo(axes_dict) {
 
     now = Date.now();
     elapsed = now - then;
@@ -293,7 +293,7 @@ function sendCommand(axes_dict) {
             axes: axes_dict
         }
 
-        exec_command(commandUrl, command);
+        send_command(command);
     }
 }
 
@@ -307,7 +307,7 @@ function scangamepads() {
         }
     }
 
-    if (enableController) {
+    if (isControllerAlreadySet) {
 
         // We enter this block only after 
         // the first time the user deactivates 

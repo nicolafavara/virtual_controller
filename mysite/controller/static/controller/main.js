@@ -16,9 +16,9 @@ function getCookie(name) {
 }
 
 
-function exec_command(url, cmd) {
+function send_command(cmd) {
 
-  console.log(cmd);
+  let url = commandUrl;
   
   fetch(url, {
     method: "POST",
@@ -56,7 +56,9 @@ function get_mapping(url) {
     });
 }
 
-function set_mapping(url, name, mapping) {
+function set_mapping(name, mapping) {
+
+  let url = set_mapping_url;
 
   fetch(url, {
     method: "POST",
