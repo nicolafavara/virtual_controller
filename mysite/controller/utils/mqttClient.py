@@ -6,7 +6,7 @@ import json
 import sys
 
 BROKER_ADDRESS = "127.0.0.1"
-#Broker = "34.221.60.243"
+#BROKER_ADDRESS = "34.221.60.243"
 PUB_TOPIC = "mqtt/commands"
 MQTT_PORT = 1883
 
