@@ -1,7 +1,7 @@
 from django.db import models
 import json
 
-# Create your models here.
+# Table containing mapping of calibrated controllers
 class Mapping(models.Model):
     controller_name = models.CharField(max_length=255);
     yaw_axis = models.IntegerField();
