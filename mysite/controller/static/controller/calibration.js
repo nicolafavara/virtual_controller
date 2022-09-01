@@ -20,11 +20,11 @@ modals.forEach(btn => btn.addEventListener('shown.bs.modal', () => {
     let n = btn.id.split('_')[2];
     current_modal = n;
     current_axis = axis_names[n];
-    requestAnimation(updateCalibrationStatus);
+    request_animation(update_calibration_status);
 }));
 modals.forEach(btn => btn.addEventListener('hide.bs.modal', () => {
 
-    cancelAnimation();
+    cancel_animation();
     current_axis = "";
 }));
 
@@ -44,7 +44,7 @@ btn_modal_3.addEventListener('click', () => {
     }
     else{
         // cancel calibration
-        cancelCalibration();
+        cancel_calibration();
     }
 
 });
@@ -52,12 +52,12 @@ btn_modal_3.addEventListener('click', () => {
 const btns_cancel = document.querySelectorAll('button[id^=btn_cancel]');
 btns_cancel.forEach(btn => btn.addEventListener("click", () => {
 
-    cancelCalibration();
+    cancel_calibration();
 }));
 
-function cancelCalibration() {
+function cancel_calibration() {
 
-    cancelAnimation();
+    cancel_animation();
 
     current_mapping = { 0: "", 1: "", 2: "", 3: "" }
     current_axis = "";
@@ -74,8 +74,8 @@ function cancelCalibration() {
 }
 
 
-function updateCalibrationStatus() {
-    scangamepads();
+function update_calibration_status() {
+    scan_gamepads();
 
     let j;
     for (j in controllers) {
@@ -105,11 +105,11 @@ function updateCalibrationStatus() {
             document.getElementById("btn_modal_" + current_modal).disabled = false;
             //alert(current_axis + " associated with " + min_axis_value);
             current_mapping[max_axis_value] = current_axis;
-            cancelAnimation();
+            cancel_animation();
             current_axis = "";
             return;
         }
     }
 
-    requestAnimation(updateCalibrationStatus);
+    request_animation(update_calibration_status);
 }

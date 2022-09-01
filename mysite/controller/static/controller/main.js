@@ -69,10 +69,10 @@ function set_mapping(name, mapping) {
     },
     body: JSON.stringify({
       "name": name,
-      "yaw_axis": getKeyByValue(mapping, "yaw"),
-      "throttle_axis": getKeyByValue(mapping, "throttle"),
-      "roll_axis": getKeyByValue(mapping, "roll"),
-      "pitch_axis": getKeyByValue(mapping, "pitch")
+      "yaw_axis": get_key_by_value(mapping, "yaw"),
+      "throttle_axis": get_key_by_value(mapping, "throttle"),
+      "roll_axis": get_key_by_value(mapping, "roll"),
+      "pitch_axis": get_key_by_value(mapping, "pitch")
     })
   })
     .then(response => {
@@ -83,6 +83,6 @@ function set_mapping(name, mapping) {
     });
 }
 
-function getKeyByValue(object, value) {
+function get_key_by_value(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 }

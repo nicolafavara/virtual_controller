@@ -14,12 +14,12 @@ const std_mapping_axes = { 0: "yaw", 1: "throttle", 2: "roll", 3: "pitch" };
 //const axes_name = { 0: "roll", 1: "pitch", 2: "throttle", 3: "yaw" };
 
 const fps = 5;
-const fpsInterval = 1000 / fps;
+const fps_interval = 1000 / fps;
 const controllers = {};
-let globalID;
+let global_ID;
 let then = Date.now();
-let isControllerAlreadySet = false;
-let controller_calibrated = false; //TODO CHECK
+let is_controller_already_set = false;
+let controller_calibrated = false;
 let center_stick_flag = true;
 
 
@@ -29,15 +29,15 @@ checker.onchange = function () {
     if (!!this.checked) {
         document.getElementById('start_modal_button').style.display = 'none';
         show_controller();
-        enableListeners();
+        enable_listeners();
     }
     else {
         show_buttons();
         // the user has disabled the controller mode from the switch.
         // Next time switch is checked, this boolean
         // will be used to re-enable controller's input
-        isControllerAlreadySet = true;
-        disableListeners();
+        is_controller_already_set = true;
+        disable_listeners();
     }
 };
 
@@ -58,18 +58,18 @@ start_cmd_button.addEventListener('click', function() {
         return;
     }
     
-    if (isControllerAlreadySet){
+    if (is_controller_already_set){
         // if we are here, it's at least the second time
         // the user activates the controller mode 
-        isControllerAlreadySet = false;
-        requestAnimation(updateStatus);
+        is_controller_already_set = false;
+        request_animation(update_status);
     }
     else{
         // if we are here, it's the first time user 
         // activate controller mode, so we neet to
         // add the gamepad to controllers array
         let gamepad = controllers[0];
-        addgamepad(gamepad);
+        add_gamepad(gamepad);
     }
 
     document.getElementById('start_rc_commands_button').style.display = "none";
@@ -80,14 +80,14 @@ let checked_val = document.querySelector('input[name="throttle_stick_radio"]:che
 if (document.querySelector('input[name="throttle_stick_radio"]')) {
     document.querySelectorAll('input[name="throttle_stick_radio"]').forEach((elem) => {
         elem.addEventListener("change", function (event) {
-            var item = event.target.value;
 
+            var item = event.target.value;
             center_stick_flag = (item == "center");
         });
     });
 }
 
-function connecthandler(e) {
+function connect_handler(e) {
     console.log("CONNECTED.");
 
     if (Object.keys(controllers).length == 0) {
@@ -109,10 +109,10 @@ function connecthandler(e) {
 
     //else
     
-    requestMapping(e.gamepad);
+    request_mapping(e.gamepad);
 }
 
-function requestMapping(gamepad) {
+function request_mapping(gamepad) {
 
     const get_mapping_url = mappingUrl.replace('str', gamepad.id)
     get_mapping(get_mapping_url)
@@ -152,7 +152,7 @@ function requestMapping(gamepad) {
         });
 }
 
-function addgamepad(gamepad) {
+function add_gamepad(gamepad) {
 
     let d = document.createElement("div");
     d.setAttribute("id", "controller" + gamepad.index);
@@ -191,15 +191,15 @@ function addgamepad(gamepad) {
 
     document.getElementById("start").style.display = "none";
 
-    requestAnimation(updateStatus);
+    request_animation(update_status);
 }
 
-function disconnecthandler(e) {
-    removegamepad(e.gamepad);
+function disconnect_handler(e) {
+    remove_gamepad(e.gamepad);
 }
 
-function removegamepad(gamepad) {
-    cancelAnimation();
+function remove_gamepad(gamepad) {
+    cancel_animation();
 
     let controllers_div = document.getElementById("controllers");
     let d = document.getElementById("controller" + gamepad.index);
@@ -217,11 +217,11 @@ function removegamepad(gamepad) {
     document.getElementById('start').style.display = "inline";
 
     controller_calibrated = false;
-    isControllerAlreadySet = false;
-    disableListeners();
+    is_controller_already_set = false;
+    disable_listeners();
 }
 
-function updateStatus() {
+function update_status() {
 
     let checker = document.getElementById('controller_switch');
     if (!!checker.checked == false) {
@@ -229,7 +229,7 @@ function updateStatus() {
         return;
     }
 
-    scangamepads();
+    scan_gamepads();
 
     let axes_dict = {};
 
@@ -271,17 +271,17 @@ function updateStatus() {
         }
     }
 
-    sendInfo(axes_dict);
-    requestAnimation(updateStatus);
+    send_info(axes_dict);
+    request_animation(update_status);
 }
 
-function sendInfo(axes_dict) {
+function send_info(axes_dict) {
 
     now = Date.now();
     elapsed = now - then;
 
-    if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
+    if (elapsed > fps_interval) {
+        then = now - (elapsed % fps_interval);
 
         let velocity = document.getElementById("velocity").value;
         let yaw_rate = document.getElementById("yaw_rate").value;
@@ -297,7 +297,7 @@ function sendInfo(axes_dict) {
     }
 }
 
-function scangamepads() {
+function scan_gamepads() {
     let gamepads = navigator.getGamepads ? navigator.getGamepads() :
         (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
 
@@ -307,12 +307,12 @@ function scangamepads() {
         }
     }
 
-    if (isControllerAlreadySet) {
+    if (is_controller_already_set) {
 
         // We enter this block only after 
         // the first time the user deactivates 
         // and re-activate the controller switch 
-        reEnableControllerInput();
+        re_enable_controller_input();
     }
 }
 
@@ -321,7 +321,7 @@ function scangamepads() {
  * the switch is active and there are controllers 
  * that are found to be already connected
  */
-function reEnableControllerInput() {
+function re_enable_controller_input() {
 
     let checker = document.getElementById('controller_switch');
     if ((!!checker.checked) == true && Object.keys(controllers).length > 0 && controller_calibrated == true) {
@@ -331,50 +331,50 @@ function reEnableControllerInput() {
     }
 }
 
-function enableListeners() {
+function enable_listeners() {
 
     if (haveEvents) {
 
-        window.addEventListener("gamepadconnected", connecthandler);
-        window.addEventListener("gamepaddisconnected", disconnecthandler);
+        window.addEventListener("gamepadconnected", connect_handler);
+        window.addEventListener("gamepaddisconnected", disconnect_handler);
     }
     else if (haveWebkitEvents) {
-        window.addEventListener("webkitgamepadconnected", connecthandler);
-        window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
+        window.addEventListener("webkitgamepadconnected", connect_handler);
+        window.addEventListener("webkitgamepaddisconnected", disconnect_handler);
     }
     else {
-        setInterval(scangamepads, 500);
+        setInterval(scan_gamepads, 500);
     }
 
-    scangamepads();
+    scan_gamepads();
 }
 
-function disableListeners() {
+function disable_listeners() {
 
     // the next time the switch is active, this boolean
     // will be used to re-enable controller's input
     //enableController = true;
 
     if (haveEvents) {
-        window.removeEventListener("gamepadconnected", connecthandler);
+        window.removeEventListener("gamepadconnected", connect_handler);
     }
     else if (haveWebkitEvents) {
-        window.removeEventListener("webkitgamepadconnected", connecthandler);
+        window.removeEventListener("webkitgamepadconnected", connect_handler);
     }
     else {
-        clearInterval(scangamepads);
+        clearInterval(scan_gamepads);
     }
 
-    cancelAnimation();
+    cancel_animation();
 }
 
-function requestAnimation(fun) {
+function request_animation(fun) {
 
     console.log("Requesting AnimationFrame...");
-    globalID = rAF(fun);
+    global_ID = rAF(fun);
 }
 
-function cancelAnimation() {
+function cancel_animation() {
     console.log("Cancelling AnimationFrame...");
-    cAF(globalID);
+    cAF(global_ID);
 }
